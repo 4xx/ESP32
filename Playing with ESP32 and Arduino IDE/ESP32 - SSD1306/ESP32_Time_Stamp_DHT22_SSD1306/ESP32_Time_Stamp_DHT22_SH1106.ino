@@ -1,7 +1,7 @@
 /*****************************************************
  * ESP32 DHT Reading, Time Stamping and OLED diplay 
  * DHT Input: ==> GPIO23.
- * 128 X 32 SSD1306  - Library by Daniel Eichhorn
+ * 128 X 32 SH1106  - Library by Daniel Eichhorn
  * 
  * MJRoBot.org 13Sept17
  *****************************************************/
@@ -15,7 +15,7 @@ const char* password = "your password";
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-#define NTP_OFFSET  -3  * 60 * 60 // In seconds
+#define NTP_OFFSET  +8  * 60 * 60 // In seconds
 #define NTP_INTERVAL 60 * 1000    // In miliseconds
 #define NTP_ADDRESS  "0.pool.ntp.org"
 
@@ -25,12 +25,13 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
 /* modified font created at http://oleddisplay.squix.ch/ */
 #include "modified_font.h"
 
-/*  SSD1306 */
-#include "SSD1306.h" 
+/*  SH1106 */
+#include <Wire.h> 
+#include "SH1106.h" 
 #define SDA_PIN 21// GPIO21 -> SDA
 #define SCL_PIN 22// GPIO22 -> SCL
 #define SSD_ADDRESS 0x3c
-SSD1306  display(SSD_ADDRESS, SDA_PIN, SCL_PIN);
+SH1106  display(SSD_ADDRESS, SDA_PIN, SCL_PIN);
 
 /* DHT */
 #include "DHT.h"
@@ -94,12 +95,12 @@ void displayData()
   display.clear();   // clear the display
   
   display.setFont(Open_Sans_Condensed_Light_20);
-  display.drawString(0, 0,  "t:");
-  display.drawString(10, 0,  String(localTemp));
-  display.drawString(47, 0,  "oC");
-  display.drawString(75, 0, "h:");
+  display.drawString(0, 0,  "T:");
+  display.drawString(12, 0,  String(localTemp));
+  display.drawString(46, 0,  "ºC");
+  display.drawString(70, 0, "H:");
   display.drawString(85, 0,  String(localHum));
-  display.drawString(120, 0 ,  "%");
+  display.drawString(119, 0 ,  "%");
 
   display.setFont(ArialMT_Plain_24);
   display.drawString(20, 31,  String(formattedTime));
